@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# 2017/12/04 :  add encoding='cp932'
+
 import codecs
 import os
 import re
 
 # semのファイル(out_file)を読み込んで、dot形式に変換し、ファイル(dot_file)に書き出す。
-def sem2dot_file(latent_list, out_file, dot_file, back_only = True):
-    out_str_list = codecs.open(out_file, 'r', encoding='cp932').read().split('\n')
+def sem2dot_file(latent_list, out_file, dot_file, encoding='cp932', back_only = True):
+    out_str_list = codecs.open(out_file, 'r', encoding=encoding).read().split('\n')
     dot_str_list = sem2dot_list(latent_list, out_str_list, back_only = back_only)
     with codecs.open(dot_file, 'w', encoding='utf8') as f:
         for line in dot_str_list:
@@ -80,9 +82,9 @@ def dot2svg(dot_file, latency_list, dot_path, suffix = '', back_only = False):
     os.system('{0} -K{1} -Tsvg {2} -o {3}'.format(dot_path, graph_type, dot_file, svg_file))
     os.system('{0} -K{1} -Tpng {2} -o {3}'.format(dot_path, graph_type, dot_file, png_file))
 
-def out2svg(out_file, latency_list, dot_path, suffix = '', back_only = False):
+def out2svg(out_file, latency_list, dot_path, suffix = '', encoding='cp932', back_only = False):
     dot_file = out_file + suffix + '.dot'
-    sem2dot_file(latency_list, out_file, dot_file, back_only = back_only)
+    sem2dot_file(latency_list, out_file, dot_file, encoding=encoding, back_only = back_only)
     svg_file = dot_file.replace('.dot', '') + '.svg'
     png_file = dot_file.replace('.dot', '') + '.png'
     #dot_path = '"C:/Program Files (x86)/Graphviz2.38/bin/dot"'
@@ -90,5 +92,6 @@ def out2svg(out_file, latency_list, dot_path, suffix = '', back_only = False):
         graph_type = 'dot'
     else:
         graph_type = 'twopi'
+    print('{0} -K{1} -Tsvg {2} -o {3}'.format(dot_path, graph_type, dot_file, svg_file))
     os.system('{0} -K{1} -Tsvg {2} -o {3}'.format(dot_path, graph_type, dot_file, svg_file))
     os.system('{0} -K{1} -Tpng {2} -o {3}'.format(dot_path, graph_type, dot_file, png_file))
